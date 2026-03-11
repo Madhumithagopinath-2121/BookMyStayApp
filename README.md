@@ -1,6 +1,6 @@
 # BookMyStayApp
-//This use case introduces centralized inventory management using a HashMap data structure.
-//Centralized inventory storage using HashMap
-//Fast lookup and update operations 
-//Controlled methods for accessing and modifying availability
-//Demonstration of separation of concerns between domain model and system state
+//This use case introduces a room search feature that allows guests to view available
+//Read-only access to room inventory
+//Displays room details and pricing
+//Filters out room types with zero availability
+//Maintains separation between search logic and booking logic
