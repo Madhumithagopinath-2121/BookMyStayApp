@@ -28,19 +28,19 @@ abstract class Room {
 
 class SingleRoom extends Room {
     public SingleRoom() {
-        super("Single Room", 1, 200, 80);
+        super("Single Room", 1, 250, 1500);
     }
 }
 
 class DoubleRoom extends Room {
     public DoubleRoom() {
-        super("Double Room", 2, 350, 120);
+        super("Double Room", 2, 400, 2500);
     }
 }
 
 class SuiteRoom extends Room {
     public SuiteRoom() {
-        super("Suite Room", 3, 500, 250);
+        super("Suite Room", 3, 750, 5000);
     }
 }
 
@@ -52,7 +52,7 @@ class RoomInventory {
         inventory = new HashMap<>();
         inventory.put("Single Room", 5);
         inventory.put("Double Room", 3);
-        inventory.put("Suite Room", 0);
+        inventory.put("Suite Room", 2);
     }
 
     public int getAvailability(String roomType) {
