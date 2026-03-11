@@ -1,7 +1,6 @@
 # BookMyStayApp
-//This use case introduces object-oriented modeling for a Hotel Booking Management System.
-//Abstract Room class representing common room properties
-//Concrete room types: SingleRoom, DoubleRoom, SuiteRoom
-//Static availability stored using simple variables
-//Console output displaying room details and availability
-//Demonstration of abstraction, inheritance, polymorphism, and encapsulation
+//This use case introduces centralized inventory management using a HashMap data structure.
+//Centralized inventory storage using HashMap
+//Fast lookup and update operations 
+//Controlled methods for accessing and modifying availability
+//Demonstration of separation of concerns between domain model and system state
