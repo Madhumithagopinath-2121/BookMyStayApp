@@ -1,100 +1,63 @@
+import java.io.*;
 import java.util.*;
 
-class BookingRequest {
-    String guestName;
-    String roomType;
+class Inventory implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public BookingRequest(String guestName, String roomType) {
-        this.guestName = guestName;
-        this.roomType = roomType;
+    Map<String, Integer> rooms;
+
+    public Inventory() {
+        rooms = new HashMap<>();
+        rooms.put("Single", 5);
+        rooms.put("Double", 3);
+        rooms.put("Suite", 2);
     }
 }
 
-class BookingSystem {
+class PersistenceService {
 
-    private Map<String, Integer> inventory = new HashMap<>();
-    private Map<String, Integer> roomCounter = new HashMap<>();
+    private static final String FILE_NAME = "inventory.dat";
 
-    public BookingSystem() {
-        inventory.put("Single", 5);
-        inventory.put("Double", 3);
-        inventory.put("Suite", 2);
+    public static void save(Inventory inventory) {
+        try (ObjectOutputStream oos =
+                     new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
 
-        roomCounter.put("Single", 0);
-        roomCounter.put("Double", 0);
-        roomCounter.put("Suite", 0);
-    }
+            oos.writeObject(inventory);
+            System.out.println("Inventory saved successfully.");
 
-    public synchronized void bookRoom(BookingRequest request) {
-
-        String type = request.roomType;
-
-        if (inventory.get(type) > 0) {
-
-            int count = roomCounter.get(type) + 1;
-            roomCounter.put(type, count);
-
-            String roomId = type + "-" + count;
-
-            inventory.put(type, inventory.get(type) - 1);
-
-            System.out.println("Booking confirmed for Guest: "
-                    + request.guestName + ", Room ID: " + roomId);
-
-        } else {
-            System.out.println("No rooms available for " + request.guestName);
+        } catch (Exception e) {
+            System.out.println("Error saving inventory.");
         }
     }
 
-    public void printInventory() {
-        System.out.println("\nRemaining Inventory:");
-        System.out.println("Single: " + inventory.get("Single"));
-        System.out.println("Double: " + inventory.get("Double"));
-        System.out.println("Suite: " + inventory.get("Suite"));
+    public static Inventory load() {
+        try (ObjectInputStream ois =
+                     new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+
+            return (Inventory) ois.readObject();
+
+        } catch (Exception e) {
+            System.out.println("No valid inventory data found. Starting fresh.");
+            return new Inventory();
+        }
     }
 }
 
-class BookingThread extends Thread {
-
-    private BookingSystem system;
-    private BookingRequest request;
-
-    public BookingThread(BookingSystem system, BookingRequest request) {
-        this.system = system;
-        this.request = request;
-    }
-
-    public void run() {
-        system.bookRoom(request);
-    }
-}
 public class BookMyStayApp {
     public static void main (String[] args){
-        BookingSystem system = new BookingSystem();
+        System.out.println("System Recovery");
 
-        System.out.println("Concurrent Booking Simulation");
+        // Load previous state (if exists)
+        Inventory inventory = PersistenceService.load();
 
-        List<BookingThread> threads = new ArrayList<>();
-
-        threads.add(new BookingThread(system, new BookingRequest("Abhi", "Single")));
-        threads.add(new BookingThread(system, new BookingRequest("Vanmathi", "Double")));
-        threads.add(new BookingThread(system, new BookingRequest("Kural", "Suite")));
-        threads.add(new BookingThread(system, new BookingRequest("Subha", "Single")));
-
-        // Start all threads
-        for (Thread t : threads) {
-            t.start();
+        // Display inventory
+        System.out.println("\nCurrent Inventory:");
+        for (Map.Entry<String, Integer> entry : inventory.rooms.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
         }
 
-        // Wait for all threads to finish
-        for (Thread t : threads) {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        // Save current state
+        PersistenceService.save(inventory);
 
-        system.printInventory();
     }
 }
