@@ -1,100 +1,71 @@
-import java.util.HashMap;
+import java.util.*;
 
-abstract class Room {
+class AddOnService {
+    private String serviceName;
+    private double price;
 
-    protected String roomType;
-    protected int beds;
-    protected double price;
-
-    public Room(String roomType, int beds, double price) {
-        this.roomType = roomType;
-        this.beds = beds;
+    public AddOnService(String serviceName, double price) {
+        this.serviceName = serviceName;
         this.price = price;
     }
 
-    public String getRoomType() {
-        return roomType;
+    public String getServiceName() {
+        return serviceName;
     }
 
-    public void displayDetails() {
-        System.out.println( roomType);
-        System.out.println("Beds: " + beds);
-        System.out.println("Price per night: " + price);
+    public double getPrice() {
+        return price;
     }
 }
 
-class SingleRoom extends Room {
-    public SingleRoom() {
-        super("Single Room", 1, 1500);
-    }
-}
+class AddOnServiceManager {
+    private Map<String, List<AddOnService>> reservationServices;
 
-class DoubleRoom extends Room {
-    public DoubleRoom() {
-        super("Double Room", 2, 2500);
-    }
-}
-
-class SuiteRoom extends Room {
-    public SuiteRoom() {
-        super("Suite Room", 3, 5000);
-    }
-}
-
-class RoomInventory {
-
-    private HashMap<String, Integer> inventory;
-
-    public RoomInventory() {
-        inventory = new HashMap<>();
-        inventory.put("Single Room", 5);
-        inventory.put("Double Room", 3);
-        inventory.put("Suite Room", 2);
+    public AddOnServiceManager() {
+        reservationServices = new HashMap<>();
     }
 
-    public int getAvailability(String roomType) {
-        return inventory.getOrDefault(roomType, 0);
-    }
-}
-
-class SearchService {
-
-    private RoomInventory inventory;
-
-    public SearchService(RoomInventory inventory) {
-        this.inventory = inventory;
+    public void addService(String reservationId, AddOnService service) {
+        reservationServices
+                .computeIfAbsent(reservationId, k -> new ArrayList<>())
+                .add(service);
     }
 
-    public void searchRooms(Room[] rooms) {
+    public List<AddOnService> getServices(String reservationId) {
+        return reservationServices.getOrDefault(reservationId, new ArrayList<>());
+    }
 
-        System.out.println("Room Search\n");
-
-        for (Room room : rooms) {
-
-            int available = inventory.getAvailability(room.getRoomType());
-
-            if (available > 0) {
-
-                room.displayDetails();
-                System.out.println("Available Rooms: " + available);
-                System.out.println();
-            }
+    public double calculateTotalCost(String reservationId) {
+        double total = 0;
+        List<AddOnService> services = getServices(reservationId);
+        for (AddOnService s : services) {
+            total += s.getPrice();
         }
+        return total;
     }
 }
 
 public class BookMyStayApp {
     public static void main (String[] args){
-        RoomInventory inventory = new RoomInventory();
+        AddOnServiceManager manager = new AddOnServiceManager();
 
-        Room[] rooms = {
-                new SingleRoom(),
-                new DoubleRoom(),
-                new SuiteRoom()
-        };
+        String reservationId = "Single-1";
 
-        SearchService searchService = new SearchService(inventory);
+        AddOnService breakfast = new AddOnService("Breakfast", 500);
+        AddOnService airportPickup = new AddOnService("Airport Pickup", 1200);
+        AddOnService spa = new AddOnService("Spa", 2000);
 
-        searchService.searchRooms(rooms);
+        manager.addService(reservationId, breakfast);
+        manager.addService(reservationId, airportPickup);
+        manager.addService(reservationId, spa);
+
+        System.out.println("Reservation ID: " + reservationId);
+        System.out.println("Selected Add-On Services:");
+
+        for (AddOnService s : manager.getServices(reservationId)) {
+            System.out.println("- " + s.getServiceName() + " : ₹" + s.getPrice());
+        }
+
+        System.out.println("Total Add-On Cost: ₹" + manager.calculateTotalCost(reservationId));
     }
 }
