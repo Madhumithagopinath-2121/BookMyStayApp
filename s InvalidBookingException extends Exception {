@@ -1,0 +1,11 @@
+  dev[m
+  feature/UC1-WelcomePage[m
+  feature/UC2-BasicRoomTypeAndStaticAvailability[m
+  feature/UC3-CentralisedRoomInventoryManagement[m
+  feature/UC4-RoomSearchAndAvaiilabilityCheck[m
+  feature/UC4-RoomSearchCheckAvailability[m
+  feature/UC5-BookingRequestFCFS[m
+  feature/UC6-ReservationConfirmationAndRoomAllocation[m
+  feature/UC7-Add-OnServiceSelection[m
+* [32mfeature/UC8-BookingHistoryAndReporting[m
+  main[m
