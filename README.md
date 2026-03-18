@@ -1,7 +1,8 @@
 # BookMyStayApp
-//To validate booking inputs and handle errors using custom exceptions.
-// Validates guest name
-//Validates room type (case-sensitive)
-//Checks room availability
-//Uses custom exception handling
-//Displays meaningful error messages
+//Use Case 10: Booking Cancellation & Inventory Rollback
+//To safely cancel bookings and restore inventory using rollback logic.
+//Cancels confirmed bookings
+//Validates booking existence
+//Restores inventory count
+//Tracks rollback history using Stack
+//Prevents invalid cancellations
